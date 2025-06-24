@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.1">
+</head>
+<body>
+
+    <a href="/" class="back-link">‹ Back to List</a>
+    <div id="loading"><h1>Loading...</h1></div>
+    
+    <div id="detail-container" class="main-container">
+        <header id="detail-hero" class="detail-hero">
+            <div class="hero-content">
+                <h1 id="restaurant-name"></h1>
+                <div id="rating" class="rating"></div>
+            </div>
+        </header>
+
+        <main class="detail-content">
+            <div id="bento-grid" class="bento-grid">
+                <div class="bento-box span-3">
+                    <h3>Address</h3>
+                    <span id="address" class="value"></span>
+                </div>
+                <div class="bento-box span-2">
+                    <h3>Cuisines</h3>
+                    <span id="cuisines" class="value cuisines"></span>
+                </div>
+                <div class="bento-box">
+                    <h3>City</h3>
+                    <span id="city" class="value"></span>
+                </div>
+                <div class="bento-box">
+                    <h3>Average Cost for Two</h3>
+                    <span id="avg-cost" class="value"></span>
+                </div>
+                <div class="bento-box">
+                    <h3>Table Booking</h3>
+                    <span id="booking" class="value"></span>
+                </div>
+                <div class="bento-box">
+                    <h3>Online Delivery</h3>
+                    <span id="delivery" class="value"></span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const cuisineImages = {
+            'Pizza': 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=800',
+            'Chinese': 'https://images.unsplash.com/photo-1585851373321-39e55145b2be?w=800',
+            'Italian': 'https://images.unsplash.com/photo-1533777857889-45b70161c248?w=800',
+            'North Indian': 'https://images.unsplash.com/photo-1606495147382-7246236d1e3e?w=800',
+            'Cafe': 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800',
+            'Bakery': 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=800',
+            'Desserts': 'https://images.unsplash.com/photo-1551024601-bec78c944514?w=800',
+            'American': 'https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=800',
+            'Burger': 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800',
+            'Sandwich': 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800',
+            'Default': 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800'
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const pathParts = window.location.pathname.split('/');
+            const restaurantId = pathParts[pathParts.length - 1];
+
+            const detailContainer = document.getElementById('detail-container');
+            const loadingDiv = document.getElementById('loading');
+
+            fetch(`/api/restaurant/${restaurantId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Restaurant not found');
+                    return response.json();
+                })
+                .then(data => {
+                    loadingDiv.style.display = 'none';
+
+                    let imageUrl = cuisineImages['Default'];
+                    if (data.cuisines) {
+                        for (const cuisine of Object.keys(cuisineImages)) {
+                            if (data.cuisines.includes(cuisine)) {
+                                imageUrl = cuisineImages[cuisine];
+                                break;
+                            }
+                        }
+                    }
+                    document.getElementById('detail-hero').style.backgroundImage = `url(${imageUrl})`;
+                    
+                    document.getElementById('restaurant-name').textContent = data.restaurant_name;
+                    document.getElementById('rating').innerHTML = `${data.aggregate_rating} ★`;
+                    document.getElementById('cuisines').textContent = data.cuisines;
+                    document.getElementById('city').textContent = data.city;
+                    document.getElementById('address').textContent = data.address;
+                    document.getElementById('avg-cost').textContent = `${data.average_cost_for_two} (${data.currency})`;
+                    
+                    const bookingSpan = document.getElementById('booking');
+                    bookingSpan.textContent = data.has_table_booking;
+                    bookingSpan.classList.add(data.has_table_booking === 'Yes' ? 'status-yes' : 'status-no');
+                    
+                    const deliverySpan = document.getElementById('delivery');
+                    deliverySpan.textContent = data.has_online_delivery;
+                    deliverySpan.classList.add(data.has_online_delivery === 'Yes' ? 'status-yes' : 'status-no');
+                    
+                    detailContainer.classList.add('is-visible');
+                })
+                .catch(error => {
+                    loadingDiv.innerHTML = '<h2>404 - Restaurant Not Found</h2><p>Could not load details for this restaurant.</p><a href="/" class="back-link" style="position: static; display:inline-block; margin-top: 20px;">‹ Go Back</a>';
+                    console.error("Error fetching restaurant details:", error);
+                });
+        });
+    </script>
+</body>
+</html>

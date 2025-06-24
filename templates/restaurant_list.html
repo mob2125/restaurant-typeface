@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience The Best Dining</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.1">
+</head>
+<body>
+
+    <header class="hero-section">
+        <div class="container">
+            <h1>Find the Perfect Place to Eat</h1>
+            <p>Discover the best restaurants, cafes, and bars in your city.</p>
+            <form id="text-search-form">
+                <input type="search" id="text-search-input" placeholder="Search by Restaurant Name or Cuisine...">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </header>
+
+    <main>
+        <section class="content-section container">
+            <h2 class="section-title fade-in-up">Our Categories</h2>
+            <div id="category-grid" class="category-grid"></div>
+
+            <div class="advanced-search-toggle">
+                <button id="toggle-filters-btn">Advanced Search & Filters</button>
+            </div>
+            
+            <div id="advanced-search-panel">
+                <div class="search-grid">
+                    <div class="search-box">
+                        <h3>Advanced Filters</h3>
+                        <form id="filter-form" class="form-row">
+                            <select id="country-select"><option value="">-- All Countries --</option></select>
+                            <input type="number" id="max-cost-input" placeholder="Max cost for two">
+                            <input type="text" id="cuisine-input" placeholder="Specific Cuisine (e.g., Italian)">
+                            <button type="submit">Apply Filters</button>
+                        </form>
+                    </div>
+                    <div class="search-box">
+                        <h3>Search by Distance</h3>
+                        <form id="geo-search-form" class="form-row">
+                            <input type="text" id="lat-input" placeholder="Your Latitude (e.g., 28.69)" required>
+                            <input type="text" id="lon-input" placeholder="Your Longitude (e.g., 77.12)" required>
+                            <input type="text" id="radius-input" placeholder="Radius in km (e.g., 3)" required>
+                            <button type="submit">Search Nearby</button>
+                        </form>
+                    </div>
+                    <div class="search-box">
+                        <h3>Search by Image</h3>
+                        <form id="image-search-form" class="form-row">
+                            <input type="file" id="image-upload-input" accept="image/*" required>
+                            <button type="submit">Find Restaurants by Image</button>
+                        </form>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                     <button type="button" id="clear-filters-btn" class="form-row button clear">Clear All Filters & Searches</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section results-section">
+            <div class="container">
+                <div id="results-header"></div>
+                <div id="restaurant-list"></div>
+                <div id="loading" style="display: none;">Loading...</div>
+                <div id="pagination-controls" class="pagination"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
