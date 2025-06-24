@@ -1,19 +1,9 @@
-Main Application Framework
-Flask==2.3.2
-gunicorn==21.2.0
-
-Database & ORM
-SQLAlchemy==2.0.21
-Flask-SQLAlchemy==3.0.5
-psycopg2-binary==2.9.9
-
-Data Loading & Processing
-pandas==2.0.3
-openpyxl==3.1.2
-
-API Calls & Machine Learning
-requests==2.31.0
-sentence-transformers==2.2.2
-torch==2.1.0
-huggingface-hub==0.17.3
-
+Flask
+Flask-SQLAlchemy
+psycopg2-binary
+pandas
+openpyxl
+requests
+sentence-transformers
+torch
+gunicorn
